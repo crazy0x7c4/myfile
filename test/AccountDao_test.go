@@ -1,16 +1,18 @@
 package test
 
-import (
-	"dao"
-	"log"
-	"testing"
-)
+//import (
+//	"dao"
+//	"log"
+//	"testing"
+//)
 
-func TestAdd(t *testing.T) {
-	dao.AddAccount("user", "12345")
-}
+//func TestAdd(t *testing.T) {
+//	accountDao := new(dao.AccountDao)
+//	accountDao.AddAccount("user", "12345")
+//}
 
-func TestGetAccount(t *testing.T) {
-	account := dao.GetAccount("userxxxx", "12345")
-	log.Println(account)
-}
+//func TestGetAccount(t *testing.T) {
+//	accountDao := new(dao.AccountDao)
+//	account, _ := accountDao.GetAccount("crazy", "11111")
+//	log.Println(account)
+//}

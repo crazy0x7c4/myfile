@@ -1,9 +1,9 @@
 package entity
 
 type Folder struct {
-	Id         uint
-	ParentId   uint
-	UserId     uint
+	Id         int
+	ParentId   int
+	UserId     int
 	Name       string
-	CreateDate uint
+	CreateDate int
 }

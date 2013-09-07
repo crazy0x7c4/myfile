@@ -4,18 +4,32 @@ import (
 	"dao"
 	. "entity"
 	"errors"
+	"log"
 )
 
-func Register(name string, password string) error {
-	account := dao.GetAccountByName(name)
-	if account.Id == 0 && account.Name == "" {
-		dao.AddAccount(name, password)
-		return nil
-	}
-	return errors.New("用户名已被注册！")
+var accountDao = new(dao.AccountDao)
+
+type AccountService struct {
 }
 
-func Login(name string, password string) (account Account) {
-	account = dao.GetAccount(name, password)
-	return
+func (accountService *AccountService) Register(name string, password string) error {
+	account, err := accountDao.GetAccountByName(name)
+	if account == nil && err != nil {
+		_, err := accountDao.AddAccount(name, password)
+		if err == nil {
+			return nil
+		}
+		return err
+	} else {
+		return errors.New("账户已经存在")
+	}
+}
+
+func (accountService *AccountService) Login(name string, password string) (*Account, error) {
+	account, err := accountDao.GetAccount(name, password)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+	return account, nil
 }

@@ -1,7 +1,7 @@
 package entity
 
 type Account struct {
-	Id       uint
+	Id       int
 	Name     string
 	Password string
 }

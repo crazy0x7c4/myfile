@@ -8,6 +8,7 @@ import (
 func main() {
 	http.HandleFunc("/register", safeHandler(RegisterHandler))
 	http.HandleFunc("/login", safeHandler(LoginHandler))
+	http.HandleFunc("/file", safeHandler(FileHandler))
 	http.ListenAndServe(":8080", nil)
 }
 

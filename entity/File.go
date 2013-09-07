@@ -1,12 +1,12 @@
 package entity
 
 type File struct {
-	Id         uint
-	FolderId   uint
-	UserId     uint
+	Id         int
+	FolderId   int
+	UserId     int
 	Name       string
 	Stuffix    string
-	Size       float32
-	CreateDate uint
-	ModifyDate uint
+	Size       int64
+	CreateDate int64
+	ModifyDate int64
 }

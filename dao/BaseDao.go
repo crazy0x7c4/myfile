@@ -3,43 +3,31 @@ package dao
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	"log"
 )
 
 var db *sql.DB
 
 func init() {
-	mysqlDB, err := sql.Open("mysql", "root:12345@/test?charset=utf8")
-	checkError(err)
+	mysqlDB, _ := sql.Open("mysql", "root:12345@/test?charset=utf8")
 	db = mysqlDB
 }
 
-func Execute(sqlStr string, params ...interface{}) uint {
+func Execute(sqlStr string, params ...interface{}) (int, error) {
 	result, err := db.Exec(sqlStr, params...)
-	checkError(err)
-	defer func() {
-		if err := recover(); err != nil {
-			log.Printf("Execute SQL Error:", err)
-		}
-	}()
-
-	id, err := result.LastInsertId()
-	checkError(err)
-
-	return uint(id)
+	if err != nil {
+		return 0, err
+	}
+	id, _ := result.LastInsertId()
+	return int(id), nil
 }
 
-func Query(sqlStr string, params ...interface{}) [][]string {
+func Query(sqlStr string, params ...interface{}) ([][]string, error) {
 	rows, err := db.Query(sqlStr, params...)
-	checkError(err)
-	defer func() {
-		if err := recover(); err != nil {
-			log.Printf("Query Error:", err)
-		}
-	}()
+	if err != nil {
+		return nil, err
+	}
 
-	cols, err := rows.Columns()
-	checkError(err)
+	cols, _ := rows.Columns()
 
 	colsLen := len(cols)
 
@@ -52,8 +40,7 @@ func Query(sqlStr string, params ...interface{}) [][]string {
 		for i := 0; i < colsLen; i++ {
 			scanArgs[i] = &data[i]
 		}
-		err := rows.Scan(scanArgs...)
-		checkError(err)
+		rows.Scan(scanArgs...)
 
 		dataStr := make([]string, colsLen)
 		for k, v := range data {
@@ -68,10 +55,10 @@ func Query(sqlStr string, params ...interface{}) [][]string {
 	}
 	defer rows.Close()
 
-	return datas
+	return datas, nil
 }
 
-func QueryRow(columnNum int, sqlStr string, params ...interface{}) []string {
+func QueryRow(columnNum int, sqlStr string, params ...interface{}) ([]string, error) {
 	row := db.QueryRow(sqlStr, params...)
 
 	data := make([]string, columnNum)
@@ -80,13 +67,9 @@ func QueryRow(columnNum int, sqlStr string, params ...interface{}) []string {
 		scanArgs[i] = &data[i]
 	}
 	err := row.Scan(scanArgs...)
-	checkError(err)
-
-	return data
-}
-
-func checkError(err error) {
 	if err != nil {
-		log.Println(err.Error())
+		return nil, err
 	}
+
+	return data, nil
 }

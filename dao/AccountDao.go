@@ -5,36 +5,53 @@ import (
 	"strconv"
 )
 
-func AddAccount(name string, password string) {
+type AccountDao struct {
+}
+
+func (accountDao *AccountDao) AddAccount(name string, password string) (int, error) {
 	sqlStr := "INSERT account SET name=?, password=?"
-	Execute(sqlStr, name, password)
+	id, err := Execute(sqlStr, name, password)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
 }
 
-func GetAccount(name string, password string) (account Account) {
+func (accountDao *AccountDao) GetAccount(name string, password string) (*Account, error) {
 	sqlStr := "SELECT * FROM account WHERE name=? AND password=?"
-	data := QueryRow(3, sqlStr, name, password)
-	account = setData(data)
-	return
+	data, err := QueryRow(3, sqlStr, name, password)
+	if err != nil {
+		return nil, err
+	}
+	account := accountDao.setData(data)
+	return account, nil
 }
 
-func GetAccountByName(name string) (account Account) {
+func (accountDao *AccountDao) GetAccountByName(name string) (*Account, error) {
 	sqlStr := "SELECT * FROM account WHERE name=?"
-	data := QueryRow(3, sqlStr, name)
-	account = setData(data)
-	return
+	data, err := QueryRow(3, sqlStr, name)
+	if err != nil {
+		return nil, err
+	}
+	account := accountDao.setData(data)
+	return account, nil
 }
 
-func GetAccountById(id uint) (account Account) {
+func (accountDao *AccountDao) GetAccountById(id uint) (*Account, error) {
 	sqlStr := "SELECT * FROM account WHERE id=?"
-	data := QueryRow(3, sqlStr, id)
-	account = setData(data)
-	return
+	data, err := QueryRow(3, sqlStr, id)
+	if err != nil {
+		return nil, err
+	}
+	account := accountDao.setData(data)
+	return account, nil
 }
 
-func setData(data []string) (account Account) {
-	uinteger32, _ := strconv.ParseUint(data[0], 0, 32)
-	account.Id = uint(uinteger32)
+func (accountDao *AccountDao) setData(data []string) *Account {
+	account := new(Account)
+	integer64, _ := strconv.ParseInt(data[0], 0, 32)
+	account.Id = int(integer64)
 	account.Name = data[1]
 	account.Password = data[2]
-	return
+	return account
 }

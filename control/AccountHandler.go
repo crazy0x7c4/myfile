@@ -1,10 +1,11 @@
 package control
 
 import (
-	"io"
 	"net/http"
 	"service"
 )
+
+var accountService = new(service.AccountService)
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
@@ -12,9 +13,9 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == "POST" {
 		name := r.FormValue("name")
 		password := r.FormValue("password")
-		err := service.Register(name, password)
+		err := accountService.Register(name, password)
 		if err != nil {
-			Templates["register.html"].Execute(w, err.Error())
+			Templates["register.html"].Execute(w, "注册失败")
 		} else {
 			Templates["register.html"].Execute(w, "注册成功")
 		}
@@ -22,5 +23,16 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "login...")
+	if r.Method == "GET" {
+		Templates["login.html"].Execute(w, nil)
+	} else if r.Method == "POST" {
+		name := r.FormValue("name")
+		password := r.FormValue("password")
+		_, err := accountService.Login(name, password)
+		if err != nil {
+			Templates["login.html"].Execute(w, err.Error())
+		} else {
+			http.Redirect(w, r, "/file", http.StatusFound)
+		}
+	}
 }
