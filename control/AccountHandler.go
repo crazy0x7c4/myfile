@@ -32,6 +32,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			Templates["login.html"].Execute(w, err.Error())
 		} else {
+			http.SetCookie(http.Cookie{})
 			http.Redirect(w, r, "/file", http.StatusFound)
 		}
 	}

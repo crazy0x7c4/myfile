@@ -5,5 +5,5 @@ type Folder struct {
 	ParentId   int
 	UserId     int
 	Name       string
-	CreateDate int
+	CreateDate int64
 }

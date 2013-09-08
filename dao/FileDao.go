@@ -64,18 +64,26 @@ func (fileDao *FileDao) GetFileList() ([]*File, error) {
 
 func (fileDao *FileDao) setData(data []string) *File {
 	file := new(File)
+
 	int64Id, _ := strconv.ParseInt(data[0], 0, 32)
 	file.Id = int(int64Id)
+
 	int64FolderId, _ := strconv.ParseInt(data[1], 0, 32)
 	file.FolderId = int(int64FolderId)
+
 	int64UserId, _ := strconv.ParseInt(data[2], 0, 32)
 	file.UserId = int(int64UserId)
+
 	file.Name = data[3]
 	file.Stuffix = data[4]
+
 	file.Size, _ = strconv.ParseInt(data[5], 0, 64)
+
 	int64CreateDate, _ := strconv.ParseInt(data[6], 0, 64)
 	file.CreateDate = int64CreateDate
+
 	int64ModifyDate, _ := strconv.ParseInt(data[7], 0, 64)
 	file.ModifyDate = int64ModifyDate
+
 	return file
 }
