@@ -22,9 +22,11 @@ func init() {
 		if ext := path.Ext(fileName); ext == ".html" {
 			filePath := TEMPLATE_DIR + "/" + fileName
 			t := template.Must(template.ParseFiles(filePath))
+			//t := template.New(fileName)
+			//t = t.Funcs(template.FuncMap{"GeneratePath": GeneratePath})
+			//t = template.Must(t.ParseFiles(filePath))
 			Templates[fileName] = t
 			log.Println("Loaded:" + fileName)
 		}
 	}
-
 }

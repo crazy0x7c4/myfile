@@ -1,32 +1,37 @@
 package service
 
 import (
-	"dao"
-	. "entity"
+	. "dao"
 	"errors"
 	"log"
 )
 
-var accountDao = new(dao.AccountDao)
+var accountDao = new(Account)
 
 type AccountService struct {
 }
 
-func (accountService *AccountService) Register(name string, password string) error {
-	account, err := accountDao.GetAccountByName(name)
-	if account == nil && err != nil {
-		_, err := accountDao.AddAccount(name, password)
+func (this *AccountService) Register(account *Account) error {
+	condition := make(map[string]interface{})
+	condition["a_name"] = account.Name
+	oldAccount, err := accountDao.GetOne(condition)
+
+	if oldAccount == nil && err != nil {
+		_, err := accountDao.Add(account)
 		if err == nil {
 			return nil
 		}
 		return err
 	} else {
-		return errors.New("账户已经存在")
+		return errors.New("该用户名已经存在")
 	}
 }
 
-func (accountService *AccountService) Login(name string, password string) (*Account, error) {
-	account, err := accountDao.GetAccount(name, password)
+func (this *AccountService) Login(name, password string) (*Account, error) {
+	condition := make(map[string]interface{})
+	condition["a_name"] = name
+	condition["a_password"] = password
+	account, err := accountDao.GetOne(condition)
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err

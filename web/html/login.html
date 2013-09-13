@@ -3,12 +3,14 @@
 		<title>Login MyFile</title>
 	</head>
 	<body>
+		<h3>{{.}}</h3>
 		<div>
 			<form action="/login" method="POST">
 				用户名：<input type="text" name="name"></input>
 				密码：<input type="password" name="password"></input>
 				<input type="submit" value="登录"></input>
 			</form>
+			<a href="/register">没有账户？</a>
 		</div>
 	</body>
 </html>
